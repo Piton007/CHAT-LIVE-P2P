@@ -3,16 +3,21 @@ import cors from "cors"
 import fileUpload from "express-fileupload"
 import bodyParser from "body-parser"
 import fileMiddleware from "./fileUpload"
+import path from "path"
 
 export default class ExpressApp {
+    private readonly frontEndPath:string
     private app = express()
 
-    constructor(){
+    constructor(frontEndPath:string = ""){
+        this.frontEndPath = frontEndPath
         this.setUpCors()
         this.setUpBodyParser()
         this.setUpUploadMiddleware()
-        this.buildRoutes()
         this.setUpStaticFiles()
+        this.buildRoutes()
+        
+       
     }
 
     private setUpCors(){
@@ -21,6 +26,7 @@ export default class ExpressApp {
 
     private setUpStaticFiles(){
         this.app.use(expose('uploads'))
+        this.app.use(expose(this.frontEndPath))
     }
 
     private setUpUploadMiddleware(){
@@ -38,7 +44,16 @@ export default class ExpressApp {
        return this.app 
     }
 
+
+
     private buildRoutes(){
-        this.app.post('/upload-avatar', fileMiddleware);
+        let self = this
+        self.app.post('/upload-avatar', fileMiddleware);
+        if (!!self.frontEndPath){
+            self.app.get("*",function (req,res) {
+                res.sendfile(path.join(self.frontEndPath,"index.html"))
+            })
+        }
+           
     }
 }

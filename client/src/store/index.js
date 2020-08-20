@@ -26,7 +26,7 @@ export default new Vuex.Store({
       form.set("name",name)
       form.set("avatar",avatar)
       return axios
-        .post("/upload-avatar",form).then(({data})=>{
+        .post("upload-avatar",form).then(({data})=>{
           context.commit("setName",name)
           context.commit("setAvatar",data.fileName)
           sessionStorage.setItem("isLogged",true) 

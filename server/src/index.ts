@@ -64,7 +64,7 @@ io.on("connection",socket => {
         users.delete(socket.id)
     })
 })
-const app = new App()
+const app = new App("D:\\Projects\\WspFake\\client\\dist")
 const server = createServer(app.getServer())
 io.listen(server)
 server.listen(3000)
